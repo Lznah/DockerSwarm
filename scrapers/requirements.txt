@@ -1,0 +1,9 @@
+selenium
+pandas
+multiprocessing_logging
+celery
+pyvirtualdisplay
+ipaddress
+tld
+sklearn
+polyglot
