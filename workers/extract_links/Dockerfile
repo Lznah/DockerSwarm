@@ -31,4 +31,4 @@ RUN pip install --upgrade pip
 # install Python dependencies
 RUN pip install -r requirements.txt
 # copy crawler files
-COPY crawler/* /app/
+COPY src/* /app/
