@@ -408,13 +408,23 @@ class Spider(object):
             return False
         return True
 
-    def is_english_page(self):
+    # def is_english_page(self):
+    #     lang_code = self.get_page_language()
+    #     if lang_code is None:
+    #         logger.warn("Cannot detect language %s, will skip" % self.top_url)
+    #         return False
+    #     elif lang_code != "en":
+    #         logger.info("Will skip non-English page %s" % self.top_url)
+    #         return False
+    #     return lang_code
+
+    def is_czech_page(self):
         lang_code = self.get_page_language()
         if lang_code is None:
             logger.warn("Cannot detect language %s, will skip" % self.top_url)
             return False
-        elif lang_code != "en":
-            logger.info("Will skip non-English page %s" % self.top_url)
+        elif lang_code != "cs":
+            logger.info("Will skip non-Czech page %s" % self.top_url)
             return False
         return lang_code
 
@@ -427,7 +437,7 @@ class Spider(object):
         if not self.load_home_page():
             return
 
-        if not self.is_english_page():
+        if not self.is_czech_page():
             return
         self.close_dialog()
         home_links = self.extract_links(level=0)
@@ -523,8 +533,9 @@ class Spider(object):
 
     def get_sales_links(self, home_links):
         home_sales_links = {}
-        SALES_KEYWORDS = ["sale", "clearance", "deal", "special",
-                          "offer", "outlet", "promotion"]
+
+        # can be czech and english, because czech programmers ofter use english words in URLs.
+        SALES_KEYWORDS = ["sale", "clearance", "deal", "special", "offer", "outlet", "promotion", "prodej", "koupit", "nabidka", "specialni", "obchod"]
 
         for link_url, link_details in home_links.iteritems():
             link_title = link_details["title"]
@@ -570,11 +581,17 @@ class Spider(object):
                            " Cannot get innerHTML or innerText %s" % url)
 
             return False
-        n_add_to_cart_inner_html = inner_html.count("add to cart")
-        n_add_to_bag_inner_html = inner_html.count("add to bag")
+        # n_add_to_cart_inner_html = inner_html.count("add to cart")
+        # n_add_to_bag_inner_html = inner_html.count("add to bag")
 
-        n_add_to_cart_inner_text = inner_text.count("add to cart")
-        n_add_to_bag_inner_text = inner_text.count("add to bag")
+        # n_add_to_cart_inner_text = inner_text.count("add to cart")
+        # n_add_to_bag_inner_text = inner_text.count("add to bag")
+
+        n_add_to_cart_inner_html = inner_html.count("pridat do voziku")
+        n_add_to_bag_inner_html = inner_html.count("pridat do kosiku")
+
+        n_add_to_cart_inner_text = inner_text.count("pridat do voziku")
+        n_add_to_bag_inner_text = inner_text.count("pridat do kosiku")
         if "<h1>access denied</h1>" in inner_html:
             raise AccessDeniedError()
 
